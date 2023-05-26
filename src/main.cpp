@@ -2,7 +2,11 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#define SW 10
+#include <SoftwareSerial.h>
+const byte rxPin = 9;
+const byte txPin = 10;
+SoftwareSerial mySerial(rxPin, txPin);
+
 String s = "";
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -14,10 +18,11 @@ void setup()
   // open the serial port:
   Serial.begin(115200);
   Serial1.begin(115200);
+  mySerial.begin(115200);
+  pinMode(txPin, OUTPUT);
   // initialize control over the keyboard:
   Keyboard.begin();
 
-  pinMode(SW, OUTPUT);
   Serial.println("start");
 
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
@@ -50,9 +55,7 @@ void loop()
       s += ",";
       Keyboard.print(s);
       s = "";
-      digitalWrite(SW, HIGH);
-      delay(100);
-      digitalWrite(SW, LOW);
+      mySerial.println("@@");
     }
     else
       s += inChar;
