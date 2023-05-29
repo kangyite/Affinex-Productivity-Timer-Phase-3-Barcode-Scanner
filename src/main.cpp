@@ -2,10 +2,6 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-// #include <SoftwareSerial.h>
-const byte rxPin = 9;
-const byte txPin = 10;
-// SoftwareSerial mySerial(rxPin, txPin);
 
 String s = "";
 
@@ -19,9 +15,7 @@ void setup()
   // open the serial port:
   Serial.begin(115200);
   Serial1.begin(115200);
-  // UCSR1B = (1 << RXEN1) | (1 << TXEN1);
-  // mySerial.begin(115200);
-  // pinMode(txPin, OUTPUT);
+
   // initialize control over the keyboard:
   Keyboard.begin();
 
@@ -37,12 +31,10 @@ void setup()
 
   display.setTextSize(3);
   display.setTextColor(WHITE);
-  // Serial1.println("hello sir");
 }
 
 void loop()
 {
-  // Serial.println(Serial1.available());
   while (Serial1.available())
   {
 
