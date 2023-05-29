@@ -2,10 +2,10 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <SoftwareSerial.h>
+// #include <SoftwareSerial.h>
 const byte rxPin = 9;
 const byte txPin = 10;
-SoftwareSerial mySerial(rxPin, txPin);
+// SoftwareSerial mySerial(rxPin, txPin);
 
 String s = "";
 
@@ -13,13 +13,15 @@ String s = "";
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+bool send = false;
 void setup()
 {
   // open the serial port:
   Serial.begin(115200);
   Serial1.begin(115200);
-  mySerial.begin(115200);
-  pinMode(txPin, OUTPUT);
+  // UCSR1B = (1 << RXEN1) | (1 << TXEN1);
+  // mySerial.begin(115200);
+  // pinMode(txPin, OUTPUT);
   // initialize control over the keyboard:
   Keyboard.begin();
 
@@ -35,14 +37,15 @@ void setup()
 
   display.setTextSize(3);
   display.setTextColor(WHITE);
-
-  // Display static text
+  // Serial1.println("hello sir");
 }
 
 void loop()
 {
+  // Serial.println(Serial1.available());
   while (Serial1.available())
   {
+
     char inChar = (char)Serial1.read();
 
     if (inChar == 13)
@@ -53,11 +56,19 @@ void loop()
       display.print(s);
       display.display();
       s += ",";
+
       Keyboard.print(s);
+
       s = "";
-      mySerial.println("@@");
+      send = true;
     }
     else
       s += inChar;
+  }
+  if (send)
+  {
+
+    Serial1.write("@");
+    send = false;
   }
 }
