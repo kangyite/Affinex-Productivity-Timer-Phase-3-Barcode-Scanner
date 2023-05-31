@@ -6,6 +6,8 @@
 #define MEMORY_SIZE 20
 #define BUF_SIZE 20
 
+uint16_t count = 0;
+char bufOut[BUF_SIZE];
 char buf[BUF_SIZE];
 
 uint32_t mem[MEMORY_SIZE];
@@ -57,6 +59,7 @@ void loop()
       buf[idx] = 0;
       if (checkMem(buf))
       {
+        count++;
         display.clearDisplay();
         display.setCursor(9, 25);
         display.print(buf);
@@ -65,8 +68,8 @@ void loop()
         Keyboard.print(',');
         send = true;
       }
-      while (Serial.available()) // clear rx buffer
-        Serial.read();
+      while (Serial1.available()) // clear rx buffer
+        Serial1.read();
       idx = 0;
     }
     else
@@ -81,7 +84,8 @@ void loop()
   }
   if (send)
   {
-    Serial1.write("@");
+    sprintf(bufOut, "%u\n", count);
+    Serial1.write(bufOut);
     send = false;
   }
 }
